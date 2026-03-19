@@ -19,22 +19,17 @@ def parse_size(value: str) -> tuple[int, int]:
     return size, size
 
 
-def apply_padding(image_path: Path, padding_percent: float) -> None:
+def apply_padding(img: Image.Image, padding_percent: float) -> Image.Image:
     """Skaluje obraz w dół i umieszcza na przezroczystym tle tego samego rozmiaru."""
-    img = Image.open(image_path).convert("RGBA")
     w, h = img.size
 
     pad_x = round(w * padding_percent / 100)
     pad_y = round(h * padding_percent / 100)
 
-    inner_w = w - 2 * pad_x
-    inner_h = h - 2 * pad_y
-
-    img = img.resize((inner_w, inner_h), Image.LANCZOS)
-
+    inner = img.resize((w - 2 * pad_x, h - 2 * pad_y), Image.LANCZOS)
     canvas = Image.new("RGBA", (w, h), (0, 0, 0, 0))
-    canvas.paste(img, (pad_x, pad_y))
-    canvas.save(image_path)
+    canvas.paste(inner, (pad_x, pad_y))
+    return canvas
 
 
 def convert_svg_to_png(
@@ -71,7 +66,9 @@ def convert_svg_to_png(
     )
 
     if padding:
-        apply_padding(output_path, padding)
+        img = Image.open(output_path).convert("RGBA")
+        img = apply_padding(img, padding)
+        img.save(output_path)
 
     return output_path
 

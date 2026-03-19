@@ -43,7 +43,7 @@ def process(
     if padding:
         img = apply_padding(img, padding)
 
-    output_path = input_path.with_name(f"{input_path.stem}-{suffix}.png")
+    output_path = input_path.with_name(f"{input_path.stem}{suffix}.png")
     img.save(output_path)
     return output_path
 
@@ -95,7 +95,7 @@ def main():
     try:
         if args.sizes:
             for w, h in args.sizes:
-                suffix = f"{w}x{h}" if w != h else str(w)
+                suffix = f"-{w}x{h}" if w != h else f"-{w}"
                 output = process(input_path, w, h, suffix, args.padding)
                 print(f"Zapisano: {output}")
         else:
@@ -108,7 +108,7 @@ def main():
                 suffix = f"@{scale}x"
                 output = process(input_path, w, h, suffix, args.padding)
                 print(f"Zapisano: {output}")
-    except Exception as e:
+    except (FileNotFoundError, ValueError, OSError) as e:
         print(f"Błąd: {e}", file=sys.stderr)
         sys.exit(1)
 

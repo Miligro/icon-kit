@@ -12,7 +12,7 @@ A set of CLI tools for working with icons — convert SVG to PNG, resize images,
 ## Requirements
 
 ```bash
-pip install cairosvg
+pip install -r requirements.txt
 ```
 
 ---
@@ -109,7 +109,7 @@ python3 png_convert.py icon.png --sizes 192 512 --padding 10
 | Mode       | Example filenames                                         |
 |------------|-----------------------------------------------------------|
 | `--sizes`  | `icon-192.png`, `icon-512.png`, `icon-144x96.png`         |
-| `--scales` | `icon-@0.5x.png`, `icon-@1.0x.png`, `icon-@2.0x.png`     |
+| `--scales` | `icon@0.5x.png`, `icon@1.0x.png`, `icon@2.0x.png`         |
 
 The output file is saved in the same folder as the input PNG.
 
