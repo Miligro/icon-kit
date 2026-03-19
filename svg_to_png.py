@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Konwerter SVG na PNG."""
+"""SVG to PNG converter."""
 
 import sys
 import argparse
@@ -9,7 +9,7 @@ import cairosvg
 
 
 def parse_size(value: str) -> tuple[int, int]:
-    """Parsuje rozmiar w formacie '192' lub '192x144'."""
+    """Parse size in '192' or '192x144' format."""
     if "x" in value.lower():
         parts = value.lower().split("x")
         if len(parts) != 2:
@@ -20,7 +20,7 @@ def parse_size(value: str) -> tuple[int, int]:
 
 
 def apply_padding(img: Image.Image, padding_percent: float) -> Image.Image:
-    """Skaluje obraz w dół i umieszcza na przezroczystym tle tego samego rozmiaru."""
+    """Scale image down and place it on a transparent canvas of the same size."""
     w, h = img.size
 
     pad_x = round(w * padding_percent / 100)
@@ -44,9 +44,9 @@ def convert_svg_to_png(
     input_path = Path(svg_path).resolve()
 
     if not input_path.exists():
-        raise FileNotFoundError(f"Plik nie istnieje: {input_path}")
+        raise FileNotFoundError(f"File not found: {input_path}")
     if input_path.suffix.lower() != ".svg":
-        raise ValueError(f"Plik musi mieć rozszerzenie .svg: {input_path}")
+        raise ValueError(f"File must have a .svg extension: {input_path}")
 
     if suffix:
         output_path = input_path.with_name(f"{input_path.stem}-{suffix}.png")
@@ -75,40 +75,40 @@ def convert_svg_to_png(
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Konwertuje plik SVG na PNG."
+        description="Convert an SVG file to PNG."
     )
-    parser.add_argument("svg_file", help="Ścieżka do pliku SVG")
+    parser.add_argument("svg_file", help="Path to the SVG file")
     parser.add_argument(
         "--scale",
         type=float,
         default=2.0,
-        help="Współczynnik skalowania (domyślnie: 2.0)",
+        help="Scale factor (default: 2.0)",
     )
     parser.add_argument(
         "--scales",
         type=float,
         nargs="+",
         metavar="SCALE",
-        help="Lista skal, np. --scales 1 2 4",
+        help="Multiple scale factors, e.g. --scales 1 2 4",
     )
     parser.add_argument(
         "--sizes",
         type=parse_size,
         nargs="+",
         metavar="SIZE",
-        help="Lista rozmiarów w px, np. --sizes 192 512 lub --sizes 192x192 512x512",
+        help="Output sizes in px, e.g. --sizes 192 512 or --sizes 192x192 512x512",
     )
     parser.add_argument(
         "--dpi",
         type=int,
         default=300,
-        help="Rozdzielczość w DPI (domyślnie: 300)",
+        help="Resolution in DPI (default: 300)",
     )
     parser.add_argument(
         "--padding",
         type=float,
         metavar="PERCENT",
-        help="Padding jako %% rozmiaru obrazu, np. --padding 10 (dla ikon maskable)",
+        help="Padding as %% of image size, e.g. --padding 10 (for maskable icons)",
     )
     args = parser.parse_args()
 
@@ -129,7 +129,7 @@ def main():
                 )
                 print(f"Zapisano: {output}")
     except (FileNotFoundError, ValueError) as e:
-        print(f"Błąd: {e}", file=sys.stderr)
+        print(f"Error: {e}", file=sys.stderr)
         sys.exit(1)
 
 

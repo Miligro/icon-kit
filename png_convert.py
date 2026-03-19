@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Konwerter PNG — zmiana rozmiaru i padding."""
+"""PNG resizer."""
 
 import sys
 import argparse
@@ -8,7 +8,7 @@ from PIL import Image
 
 
 def parse_size(value: str) -> tuple[int, int]:
-    """Parsuje rozmiar w formacie '192' lub '192x144'."""
+    """Parse size in '192' or '192x144' format."""
     if "x" in value.lower():
         parts = value.lower().split("x")
         if len(parts) != 2:
@@ -19,7 +19,7 @@ def parse_size(value: str) -> tuple[int, int]:
 
 
 def apply_padding(img: Image.Image, padding_percent: float) -> Image.Image:
-    """Skaluje obraz w dół i umieszcza na przezroczystym tle tego samego rozmiaru."""
+    """Scale image down and place it on a transparent canvas of the same size."""
     w, h = img.size
     pad_x = round(w * padding_percent / 100)
     pad_y = round(h * padding_percent / 100)
@@ -50,46 +50,46 @@ def process(
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Zmienia rozmiar pliku PNG."
+        description="Resize a PNG file."
     )
-    parser.add_argument("png_file", help="Ścieżka do pliku PNG")
+    parser.add_argument("png_file", help="Path to the PNG file")
     parser.add_argument(
         "--sizes",
         type=parse_size,
         nargs="+",
         metavar="SIZE",
-        help="Lista rozmiarów w px, np. --sizes 192 512 lub --sizes 192x144",
+        help="Output sizes in px, e.g. --sizes 192 512 or --sizes 192x144",
     )
     parser.add_argument(
         "--scale",
         type=float,
-        help="Współczynnik skalowania względem oryginału, np. --scale 0.5",
+        help="Scale factor relative to original, e.g. --scale 0.5",
     )
     parser.add_argument(
         "--scales",
         type=float,
         nargs="+",
         metavar="SCALE",
-        help="Lista współczynników skalowania, np. --scales 0.5 1 2",
+        help="Multiple scale factors, e.g. --scales 0.5 1 2",
     )
     parser.add_argument(
         "--padding",
         type=float,
         metavar="PERCENT",
-        help="Padding jako %% rozmiaru obrazu (obraz zachowuje podany rozmiar)",
+        help="Padding as %% of image size; file keeps the requested size",
     )
     args = parser.parse_args()
 
     if not args.sizes and not args.scale and not args.scales:
-        parser.error("Podaj --sizes, --scale lub --scales.")
+        parser.error("Provide --sizes, --scale, or --scales.")
 
     input_path = Path(args.png_file).resolve()
 
     if not input_path.exists():
-        print(f"Błąd: Plik nie istnieje: {input_path}", file=sys.stderr)
+        print(f"Error: File not found: {input_path}", file=sys.stderr)
         sys.exit(1)
     if input_path.suffix.lower() != ".png":
-        print(f"Błąd: Plik musi mieć rozszerzenie .png: {input_path}", file=sys.stderr)
+        print(f"Error: File must have a .png extension: {input_path}", file=sys.stderr)
         sys.exit(1)
 
     try:
@@ -109,7 +109,7 @@ def main():
                 output = process(input_path, w, h, suffix, args.padding)
                 print(f"Zapisano: {output}")
     except (FileNotFoundError, ValueError, OSError) as e:
-        print(f"Błąd: {e}", file=sys.stderr)
+        print(f"Error: {e}", file=sys.stderr)
         sys.exit(1)
 
 
