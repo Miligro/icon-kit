@@ -118,3 +118,7 @@ The output file is saved in the same folder as the input PNG.
 ## License
 
 MIT
+
+---
+
+Built with the assistance of [Claude](https://claude.ai) by Anthropic.
