@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Środowisko wirtualne
+venv/
+.venv/
+env/
+
+# Pliki wyjściowe
+*.png
+*.svg
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# System
+.DS_Store
+Thumbs.db
